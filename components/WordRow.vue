@@ -20,8 +20,8 @@ export default {
   watch: {
     tempValue(newValue) {
       this.$emit("update:tempValue", newValue);
-        console.log(this.value)
-        console.log('temp value', this.tempValue)
+        // console.log(this.value)
+        // console.log('temp value', this.tempValue)
     },
   },
 };

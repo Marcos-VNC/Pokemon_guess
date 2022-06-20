@@ -10,7 +10,10 @@
         :submitted="i < currentGuessIndex"
       />
     </div>
-    <simple-keyboard @onKeyPress="handleInput" />
+    <simple-keyboard
+      @onKeyPress="handleInput"
+      :guessedLetters="guessedLetters"
+    />
   </div>
 </template>
 
@@ -29,6 +32,11 @@ export default {
       guesses: ["", "", "", "", "", ""],
       temp_resp: "",
       currentGuessIndex: 0,
+      guessedLetters: {
+        miss: [],
+        found: [],
+        hint: [],
+      },
     };
   },
 
@@ -57,11 +65,23 @@ export default {
 
       if (key == "{enter}") {
         //Envia a tentativa
+        if (currentGuess.length == 5) {
+          this.currentGuessIndex++;
+          for (var i = 0; i < currentGuess.length; i++) {
+            let c = currentGuess.charAt(i);
+            if (c == this.solution.charAt(i)) {
+              this.guessedLetters.found.push(c);
+            } else if (this.solution.indexOf(c) != -1) {
+              this.guessedLetters.hint.push(c);
+            } else {
+              this.guessedLetters.miss.push(c);
+            }
+          }
+        }
       } else if (key == "{bksp}") {
         //Remove a ultima letra
         this.guesses[this.currentGuessIndex] = currentGuess.slice(0, -1);
-        this.temp_resp = this.guesses[this.currentGuessIndex]
-
+        this.temp_resp = this.guesses[this.currentGuessIndex];
       } else if (currentGuess.length < 5) {
         //Adiciona a letra
 
