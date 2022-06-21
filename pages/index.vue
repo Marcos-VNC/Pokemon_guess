@@ -10,6 +10,9 @@
         :submitted="i < currentGuessIndex"
       />
     </div>
+    <p v-if="wonGame" class="text-center">Congrats</p>
+    <p v-else-if="lostGame" class="text-center">Cry</p>
+
     <simple-keyboard
       @onKeyPress="handleInput"
       :guessedLetters="guessedLetters"
@@ -58,7 +61,7 @@ export default {
 
   methods: {
     handleInput(key) {
-      if (this.currentGuessIndex >= 6) {
+      if (this.currentGuessIndex >= 6 || this.wonGame) {
         return;
       }
       const currentGuess = this.guesses[this.currentGuessIndex];
@@ -91,6 +94,20 @@ export default {
           this.temp_resp += key;
         }
         // console.log(this.guesses[0])
+      }
+    },
+  },
+
+  computed: {
+    wonGame() {
+      if(this.guesses[this.currentGuessIndex - 1] === this.solution){
+        return true
+      }
+    },
+
+    lostGame() {
+      if(!this.wonGame && this.currentGuessIndex >= 6){
+        return true
       }
     },
   },
