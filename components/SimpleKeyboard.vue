@@ -64,12 +64,22 @@ div.miss {
 
 div.found {
     @apply bg-green-600 !important;
-    @apply text-white ;
+    @apply text-white;
 }
 
 div.hint:not(.found){
     @apply bg-yellow-500 !important;
-    @apply text-white ;
+    @apply text-white;
+}
+
+
+.hg-theme-default .hg-button{
+  background-color:#40e0d0;
+  font-size: 20px;
+}
+
+.hg-theme-default{
+  background-color: transparent;
 }
 
 </style>

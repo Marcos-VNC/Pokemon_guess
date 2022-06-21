@@ -8,6 +8,7 @@
         :tempValue.sync="temp_resp"
         :solution="solution"
         :submitted="i < currentGuessIndex"
+        :letterLength="letterLength"
       />
     </div>
     <p v-if="wonGame" class="text-center">Congrats</p>
@@ -20,6 +21,7 @@
   </div>
 </template>
 
+
 <script>
 import WordRow from "~/components/WordRow.vue";
 import SimpleKeyboard from "~/components/SimpleKeyboard.vue";
@@ -31,7 +33,8 @@ export default {
   },
   data() {
     return {
-      solution: "books",
+      solution: "",
+      letterLength: 0,
       guesses: ["", "", "", "", "", ""],
       temp_resp: "",
       currentGuessIndex: 0,
@@ -57,7 +60,14 @@ export default {
     });
   },
 
-  created() {},
+  created() {
+    this.$axios.$get("/pokemon/1").then((response) => {
+      console.log(response.name);
+      this.letterLength = response.name.length;
+      this.solution = response.name;
+      console.log(this.letterLength);
+    });
+  },
 
   methods: {
     handleInput(key) {
@@ -68,7 +78,7 @@ export default {
 
       if (key == "{enter}") {
         //Envia a tentativa
-        if (currentGuess.length == 5) {
+        if (currentGuess.length == this.letterLength) {
           this.currentGuessIndex++;
           for (var i = 0; i < currentGuess.length; i++) {
             let c = currentGuess.charAt(i);
@@ -85,7 +95,7 @@ export default {
         //Remove a ultima letra
         this.guesses[this.currentGuessIndex] = currentGuess.slice(0, -1);
         this.temp_resp = this.guesses[this.currentGuessIndex];
-      } else if (currentGuess.length < 5) {
+      } else if (currentGuess.length < this.letterLength) {
         //Adiciona a letra
 
         const alphaRegex = /[a-zA-Z]/;
@@ -100,14 +110,14 @@ export default {
 
   computed: {
     wonGame() {
-      if(this.guesses[this.currentGuessIndex - 1] === this.solution){
-        return true
+      if (this.guesses[this.currentGuessIndex - 1] === this.solution) {
+        return true;
       }
     },
 
     lostGame() {
-      if(!this.wonGame && this.currentGuessIndex >= 6){
-        return true
+      if (!this.wonGame && this.currentGuessIndex >= 6) {
+        return true;
       }
     },
   },

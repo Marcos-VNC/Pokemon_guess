@@ -1,7 +1,7 @@
 <template>
-  <div class="grid max-w-xs grid-cols-5 gap-1 mx-auto mb-1">
+  <div class="grid max-w-xs grid-cols-9 gap-1 mx-auto mb-1">
     <letter-box
-      v-for="i in 5"
+      v-for="i in letterLength"
       :key="i"
       :letter="value[i - 1]"
       :color="colors[i - 1]"
@@ -20,6 +20,7 @@ export default {
   props: {
     value: String,
     solution: String,
+    letterLength: Number,
     submitted: Boolean,
     tempValue: String,
   },
@@ -41,10 +42,14 @@ export default {
       if (this.submitted) {
         let s = this.solution;
         let v = this.value;
+        var temp = []
+        for (let i = 0; i < this.letterLength; i++) {
+          temp.push('gray')
+          
+        }
 
-        let temp = ["gray", "gray", "gray", "gray", "gray"];
         let letterPool = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < this.letterLength; i++) {
           if (s.charAt(i) == v.charAt(i)) {
             //se o valor bater
             temp[i] = "green";
@@ -52,7 +57,7 @@ export default {
             letterPool.push(s.charAt(i));
           }
         }
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < this.letterLength; i++) {
           if (temp[i] == "gray") {
             if (letterPool.indexOf(v.charAt(i)) != -1) {
               letterPool.splice(letterPool.indexOf(v.charAt(i)), 1);
@@ -61,7 +66,7 @@ export default {
           }
           this.colors[i] = temp[i];
           this.temp_color = temp[i];
-          new Promise((resolve) => setTimeout(resolve, 933));
+          new Promise((resolve) => setTimeout(resolve, 233));
         }
       }
     },
