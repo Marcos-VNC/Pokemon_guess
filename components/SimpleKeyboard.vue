@@ -74,7 +74,7 @@ div.hint:not(.found){
 
 
 .hg-theme-default .hg-button{
-  background-color:#40e0d0;
+  background-color:#defffb;
   font-size: 20px;
 }
 

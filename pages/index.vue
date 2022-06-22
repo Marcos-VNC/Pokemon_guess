@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-screen max-w-md mx-auto justify-evenly">
-    <div>
+    <div v-if="iniciar">
       <word-row
         v-for="(guess, i) in guesses"
         :key="i"
@@ -9,15 +9,16 @@
         :solution="solution"
         :submitted="i < currentGuessIndex"
         :letterLength="letterLength"
+        :customClass="myclass"
+      />
+      <simple-keyboard
+        @onKeyPress="handleInput"
+        :guessedLetters="guessedLetters"
       />
     </div>
     <p v-if="wonGame" class="text-center">Congrats</p>
     <p v-else-if="lostGame" class="text-center">Cry</p>
-
-    <simple-keyboard
-      @onKeyPress="handleInput"
-      :guessedLetters="guessedLetters"
-    />
+    <button v-if="!iniciar" @click="iniciarGame">INICIAR</button>
   </div>
 </template>
 
@@ -43,11 +44,13 @@ export default {
         found: [],
         hint: [],
       },
+      myclass: "",
+      iniciar: false,
     };
   },
 
   async mounted() {
-    await window.addEventListener("keyup", (e) => {
+    window.addEventListener("keyup", (e) => {
       e.preventDefault();
       let key =
         e.keyCode == 13
@@ -61,11 +64,12 @@ export default {
   },
 
   created() {
-    this.$axios.$get("/pokemon/1").then((response) => {
+    const id = this.aleatorio(1, 250);
+    this.$axios.$get(`/pokemon/${id}`).then((response) => {
       console.log(response.name);
       this.letterLength = response.name.length;
       this.solution = response.name;
-      console.log(this.letterLength);
+      this.myclass = `grid-cols-${this.letterLength}`;
     });
   },
 
@@ -105,6 +109,13 @@ export default {
         }
         // console.log(this.guesses[0])
       }
+    },
+
+    aleatorio(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    },
+    iniciarGame() {
+      this.iniciar = true
     },
   },
 
