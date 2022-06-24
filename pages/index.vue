@@ -27,7 +27,9 @@
         </div>
         <p v-if="wonGame" class="text-center">Congrats</p>
         <p v-else-if="lostGame" class="text-center">Cry</p>
-        <button v-if="!iniciar" @click="iniciarGame">INICIAR</button>
+        <button class="init" v-if="!iniciar" @click="iniciarGame">
+          INICIAR
+        </button>
       </div>
     </div>
     <div class="side-bar">
@@ -44,12 +46,12 @@
     </div>
 
     <div class="pokebolls">
-      <img src="../static/pokebola.png" />
-      <img src="../static/pokebola.png" />
-      <img src="../static/pokebola.png" />
-      <img src="../static/pokebola.png" />
-      <img src="../static/pokebola.png" />
-      <img src="../static/pokebola.png" />
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
+      <div class="rotate"><img src="../static/pokebola.png" /></div>
     </div>
   </div>
 </template>
@@ -182,7 +184,7 @@ export default {
 .hero {
   width: 100%;
   height: 100vh;
-  background-image: url("../static/pokemon_bg.png");
+  background-image: url("../static/pokemon_bg2.png");
   background-size: cover;
   background-position: center;
   position: relative;
@@ -220,11 +222,27 @@ export default {
 
 button {
   color: #fbfcfd;
-  padding: 10px 25px;
   background: transparent;
   border-radius: 20px;
   outline: none;
   cursor: pointer;
+}
+
+.init {
+  position: relative;
+  display: inline-block;
+  padding: 15px 2px;
+  color: #2196f3;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  overflow: hidden;
+  transition: 0.2s;
+}
+
+.init:hover {
+  color: #2196f3;
+  background: #255784;
+  box-shadow: 0 0 10px #2196f3, 0 0 40px #2196f3, 0 0 80px #2196f3;
 }
 
 .content {
@@ -281,9 +299,15 @@ h1 {
   bottom: 30px;
 }
 
-.pokebolls img {
+.pokebolls .rotate {
   width: 50px;
   animation: pokeboll 7s linear infinite;
+  pointer-events: none;
+}
+
+.pokebolls .rotate img {
+  width: 50px;
+  animation: rotating 7s linear infinite;
 }
 .pokebolls {
   width: 100%;
@@ -317,25 +341,34 @@ h1 {
   }
 }
 
-.pokebolls img:nth-child(1) {
+@keyframes rotating {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.pokebolls .rotate:nth-child(1) {
   animation-delay: 2s;
   width: 30px;
 }
-.pokebolls img:nth-child(2) {
+.pokebolls .rotate:nth-child(2) {
   animation-delay: 1s;
 }
-.pokebolls img:nth-child(3) {
+.pokebolls .rotate:nth-child(3) {
   animation-delay: 3s;
   width: 33px;
 }
-.pokebolls img:nth-child(4) {
+.pokebolls .rotate:nth-child(4) {
   animation-delay: 4.5s;
 }
-.pokebolls img:nth-child(5) {
+.pokebolls .rotate:nth-child(5) {
   animation-delay: 6s;
   width: 28px;
 }
-.pokebolls img:nth-child(6) {
+.pokebolls .rotate:nth-child(6) {
   animation-delay: 3s;
   width: 40px;
 }
