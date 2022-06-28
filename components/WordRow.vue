@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="letterLength == 3"
-    class="grid max-w-xs gap-1 mx-auto mb-1 grid-cols-3"
+    class="grid max-w-xs gap-1 mx-auto mb-1 grid-cols-3 teste"
   >
     <letter-box
       v-for="i in letterLength"

@@ -9,7 +9,7 @@
     </div>
     <div class="content">
       <div class="flex flex-col h-screen max-w-md mx-auto justify-evenly">
-        <div v-if="iniciar">
+        <div style="margin-bottom: auto" v-if="iniciar">
           <word-row
             v-for="(guess, i) in guesses"
             :key="i"
@@ -24,9 +24,38 @@
             @onKeyPress="handleInput"
             :guessedLetters="guessedLetters"
           />
+          <br />
+          <div v-if="currentGuessIndex >= 1" class="flex flex-wrap text-center">
+            <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
+              <p>Type</p>
+            </div>
+            <div class="w-1/3 mr-auto h-12 dica">
+              <div v-if="tipos[1] != null" v-bind:class="coresTipos[0]">
+                <p>{{ tipos[0] }}</p>
+              </div>
+              <div v-if="tipos[1] != null" v-bind:class="coresTipos[1]">
+                <p>{{ tipos[1] }}</p>
+              </div>
+
+              <div v-else v-bind:class="coresTipos[0]">
+                <p>{{ tipos[0] }}</p>
+              </div>
+            </div>
+          </div>
+          <div v-if="currentGuessIndex >= 2" class="flex flex-wrap text-center">
+            <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
+              <p>Type</p>
+            </div>
+            <div class="w-1/3 mr-auto bg-gray-400 h-12 dica">
+              <p>Fire</p>
+              <p>Normal</p>
+            </div>
+          </div>
+
+          <p v-if="wonGame" class="text-center">Congrats</p>
+          <p v-else-if="lostGame" class="text-center">Cry</p>
         </div>
-        <p v-if="wonGame" class="text-center">Congrats</p>
-        <p v-else-if="lostGame" class="text-center">Cry</p>
+
         <button class="init" v-if="!iniciar" @click="iniciarGame">
           INICIAR
         </button>
@@ -80,6 +109,10 @@ export default {
       },
       myclass: "",
       iniciar: false,
+      pokemon: {},
+      tipos: [],
+      coresTipos: [],
+      altura: "",
     };
   },
 
@@ -97,14 +130,58 @@ export default {
     });
   },
 
-  created() {
+  async created() {
     const id = this.aleatorio(1, 250);
-    this.$axios.$get(`/pokemon/${id}`).then((response) => {
+    await this.$axios.$get(`/pokemon/${id}`).then((response) => {
       console.log(response.name);
       this.letterLength = response.name.length;
       this.solution = response.name;
+      this.pokemon = response;
       this.myclass = `grid-cols-${this.letterLength}`;
+
+      for (let i = 0; i < response.types.length; i++) {
+        this.tipos.push(response.types[i].type.name);
+
+        if (response.types[i].type.name == "fire") {
+          this.coresTipos.push(`bg-red-400 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "water") {
+          this.coresTipos.push(`bg-blue-400 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "grass") {
+          this.coresTipos.push(`bg-green-400 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "psychic") {
+          this.coresTipos.push(`bg-indigo-700 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "fairy") {
+          this.coresTipos.push(`bg-purple-700 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "poison") {
+          this.coresTipos.push(`bg-pink-600 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "ground") {
+          this.coresTipos.push(`bg-yellow-800 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "rock") {
+          this.coresTipos.push(`bg-yellow-700 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "electric") {
+          this.coresTipos.push(`bg-yellow-300 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "fighting") {
+          this.coresTipos.push(`bg-red-800 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "normal") {
+          this.coresTipos.push(`bg-gray-600 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "bug") {
+          this.coresTipos.push(`bg-green-800 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "ice") {
+          this.coresTipos.push(`bg-blue-200 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "flying") {
+          this.coresTipos.push(`bg-green-100 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "ghost") {
+          this.coresTipos.push(`bg-gray-200 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "dark") {
+          this.coresTipos.push(`bg-gray-800 w-1/2 mr-auto h-12 dica`);
+        }
+      }
     });
+    console.log(this.coresTipos);
+    console.log(this.tipos);
+    // for (let i = 0; i < pokemon.types.length; i++) {
+    //   const element = array[i];
+    // }
   },
 
   methods: {
@@ -371,5 +448,11 @@ h1 {
 .pokebolls .rotate:nth-child(6) {
   animation-delay: 3s;
   width: 40px;
+}
+
+.dica {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

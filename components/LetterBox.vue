@@ -9,6 +9,7 @@
       uppercase
       border-2 border-gray-200
       transition-all duration-300
+      divBorder
     "
     :class="{
       'border-gray-500 bg-gray-500 text-white': color == 'gray',
@@ -55,4 +56,8 @@ export default {
 </script>
 
 <style>
+
+.divBorder{
+  border-color: rgb(58, 58, 58);
+}
 </style>
