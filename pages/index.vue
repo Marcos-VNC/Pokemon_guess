@@ -25,6 +25,7 @@
             :guessedLetters="guessedLetters"
           />
           <br />
+
           <div v-if="currentGuessIndex >= 1" class="flex flex-wrap text-center">
             <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
               <p>Type</p>
@@ -44,11 +45,36 @@
           </div>
           <div v-if="currentGuessIndex >= 2" class="flex flex-wrap text-center">
             <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
-              <p>Type</p>
+              <p>Color</p>
             </div>
             <div class="w-1/3 mr-auto bg-gray-400 h-12 dica">
-              <p>Fire</p>
-              <p>Normal</p>
+              <p>{{ cor }}</p>
+            </div>
+          </div>
+          <div v-if="currentGuessIndex >= 3" class="flex flex-wrap text-center">
+            <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
+              <p>Generation</p>
+            </div>
+            <div class="w-1/3 mr-auto bg-gray-400 h-12 dica">
+              <p>{{ geracao }}</p>
+            </div>
+          </div>
+          <div v-if="currentGuessIndex >= 4" class="flex flex-wrap text-center">
+            <div class="w-1/3 ml-auto bg-gray-500 h-12 dica">
+              <p>Habitat</p>
+            </div>
+            <div class="w-1/3 mr-auto bg-gray-400 h-12 dica">
+              <p>{{ habitat }}</p>
+            </div>
+          </div>
+          <div v-if="currentGuessIndex >= 5" class="dica">
+            <div class="bg-gray-500 h-12 dica desc">
+              <p>Description</p>
+            </div>
+          </div>
+          <div v-if="currentGuessIndex >= 5" class="dica">
+            <div class="bg-gray-400 h-12 dica desc scroll">
+              {{ descricao }}
             </div>
           </div>
 
@@ -113,6 +139,10 @@ export default {
       tipos: [],
       coresTipos: [],
       altura: "",
+      cor: "",
+      descricao: "",
+      geracao: "",
+      habitat: "",
     };
   },
 
@@ -139,6 +169,16 @@ export default {
       this.pokemon = response;
       this.myclass = `grid-cols-${this.letterLength}`;
 
+      this.$axios
+        .$get(`/pokemon-species/${response.species.name}`)
+        .then((response_specie) => {
+          console.log(response_specie.color.name);
+          this.cor = response_specie.color.name;
+          this.descricao = response_specie.flavor_text_entries[0].flavor_text;
+          this.habitat = response_specie.habitat.name;
+          this.geracao = response_specie.generation.name;
+        });
+
       for (let i = 0; i < response.types.length; i++) {
         this.tipos.push(response.types[i].type.name);
 
@@ -147,38 +187,43 @@ export default {
         } else if (response.types[i].type.name == "water") {
           this.coresTipos.push(`bg-blue-400 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "grass") {
-          this.coresTipos.push(`bg-green-400 w-1/2 mr-auto h-12 dica`);
+          this.coresTipos.push(`bg-green-500 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "psychic") {
-          this.coresTipos.push(`bg-indigo-700 w-1/2 mr-auto h-12 dica`);
-        } else if (response.types[i].type.name == "fairy") {
-          this.coresTipos.push(`bg-purple-700 w-1/2 mr-auto h-12 dica`);
-        } else if (response.types[i].type.name == "poison") {
           this.coresTipos.push(`bg-pink-600 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "fairy") {
+          this.coresTipos.push(`bg-pink-700 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "poison") {
+          this.coresTipos.push(`bg-purple-800 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "ground") {
-          this.coresTipos.push(`bg-yellow-800 w-1/2 mr-auto h-12 dica`);
-        } else if (response.types[i].type.name == "rock") {
           this.coresTipos.push(`bg-yellow-700 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "rock") {
+          this.coresTipos.push(`bg-yellow-800 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "electric") {
           this.coresTipos.push(`bg-yellow-300 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "fighting") {
           this.coresTipos.push(`bg-red-800 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "normal") {
-          this.coresTipos.push(`bg-gray-600 w-1/2 mr-auto h-12 dica`);
+          this.coresTipos.push(`bg-gray-400 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "bug") {
-          this.coresTipos.push(`bg-green-800 w-1/2 mr-auto h-12 dica`);
+          this.coresTipos.push(`bg-green-700 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "ice") {
           this.coresTipos.push(`bg-blue-200 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "flying") {
-          this.coresTipos.push(`bg-green-100 w-1/2 mr-auto h-12 dica`);
+          this.coresTipos.push(`bg-blue-100 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "ghost") {
-          this.coresTipos.push(`bg-gray-200 w-1/2 mr-auto h-12 dica`);
+          this.coresTipos.push(`bg-indigo-800 w-1/2 mr-auto h-12 dica`);
         } else if (response.types[i].type.name == "dark") {
           this.coresTipos.push(`bg-gray-800 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "dragon") {
+          this.coresTipos.push(`bg-teal-400 w-1/2 mr-auto h-12 dica`);
+        } else if (response.types[i].type.name == "steel") {
+          this.coresTipos.push(`bg-gray-500 w-1/2 mr-auto h-12 dica`);
         }
       }
     });
     console.log(this.coresTipos);
     console.log(this.tipos);
+    console.log(this.pokemon);
     // for (let i = 0; i < pokemon.types.length; i++) {
     //   const element = array[i];
     // }
@@ -454,5 +499,21 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 40px;
 }
+
+.desc {
+  width: 66.7%;
+}
+
+.scroll {
+  padding: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* overflow: auto; */
+  white-space: nowrap;
+}
+/* .descricao {
+  font-size: 8px;
+} */
 </style>
