@@ -8,7 +8,7 @@
       <button type="button">Sign Up</button>
     </div>
     <div class="content">
-      <div class="flex flex-col h-screen max-w-md mx-auto justify-evenly">
+      <div class="flex flex-col h-screen max-w-md mx-auto justify-evenly game">
         <div style="margin-bottom: auto" v-if="iniciar">
           <word-row
             v-for="(guess, i) in guesses"
@@ -72,14 +72,47 @@
               <p>Description</p>
             </div>
           </div>
-          <div v-if="currentGuessIndex >= 5" class="dica">
-            <div class="bg-gray-400 h-12 dica desc scroll">
+          <div v-if="currentGuessIndex >= 5" class="dica-text">
+            <div class="bg-gray-400 h-12 dica desc-text scroll">
               {{ descricao }}
             </div>
           </div>
+          <br><br>
+          <div v-if="wonGame" class="pokemon">
+            <div class="wrapper">
+              <a href="#modalbox">Ganhou, Ver pokemon</a>
+              <a href="">New game</a>
+            </div>
 
-          <p v-if="wonGame" class="text-center">Congrats</p>
-          <p v-else-if="lostGame" class="text-center">Cry</p>
+            <div id="modalbox" class="modal">
+              <div class="bg-gray-400 modalcontent">
+                <h2>{{ pokemon.name }}</h2>
+                <img :src="spriteOficial" alt="" />
+                <a href="#" class="modalclose">&times;</a>
+              </div>
+            </div>
+          </div>
+
+          <div v-else-if="currentGuessIndex >= 5" class="pokemon">
+            <div v-if="lostGame" class="wrapper">
+              <a href="#modalbox">Perdeu, Ver pokemon</a>
+              <a href="">New game</a>
+            </div>
+            <div v-else>
+              <img :src="sprite" alt="" />
+            </div>
+
+            <div id="modalbox" class="modal">
+              <div class="bg-gray-400 modalcontent">
+                <h2>{{ pokemon.name }}</h2>
+                <img :src="spriteOficial" alt="" />
+                <a href="#" class="modalclose">&times;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- <p v-if="wonGame" class="text-center">Congrats</p>
+          <p v-else-if="lostGame" class="text-center">Cry</p> -->
         </div>
 
         <button class="init" v-if="!iniciar" @click="iniciarGame">
@@ -90,7 +123,7 @@
     <div class="side-bar">
       <img src="../static/menu.png" class="menu" />
       <div class="social-links">
-        <img src="../static/socials/fb.png" alt="" />
+        <a href="https://github.com/Marcos-VNC/Pokemon_guess"><img src="../static/socials/github.png" alt="" /></a> 
         <img src="../static/socials/ig.png" alt="" />
         <img src="../static/socials/tw.png" alt="" />
       </div>
@@ -143,6 +176,8 @@ export default {
       descricao: "",
       geracao: "",
       habitat: "",
+      sprite: "",
+      spriteOficial: "",
     };
   },
 
@@ -167,6 +202,8 @@ export default {
       this.letterLength = response.name.length;
       this.solution = response.name;
       this.pokemon = response;
+      this.sprite = response.sprites.front_default;
+      this.spriteOficial = response.sprites.other.home.front_default;
       this.myclass = `grid-cols-${this.letterLength}`;
 
       this.$axios
@@ -303,6 +340,10 @@ export default {
   font-family: sans-serif;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .hero {
   width: 100%;
   height: 100vh;
@@ -311,6 +352,10 @@ export default {
   background-position: center;
   position: relative;
   overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: justify;
+  scrollbar-width: none;
 }
 
 .logo {
@@ -369,11 +414,16 @@ button {
 
 .content {
   color: #fbfcfd;
+  margin-top: 100px;
   /* position: absolute; */
   /* top: 50%;
   left: 35%;
   transform: translateY(-50%);
   z-index: 2; */
+}
+
+.game {
+  margin-top: 100px;
 }
 
 h1 {
@@ -384,7 +434,7 @@ h1 {
 
 .side-bar {
   width: 50px;
-  height: 100vh;
+  height: 140vh;
   background: linear-gradient(#212121, #000000);
   /* background: linear-gradient(#338545, #000000); */
   position: absolute;
@@ -499,21 +549,123 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: 30px;
+}
+
+.dica-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+
+.dica div {
+  height: 30px;
+}
+.dica-text div {
+  margin-top: auto;
+  height: 60px;
 }
 
 .desc {
   width: 66.7%;
 }
 
-.scroll {
-  padding: 4px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  /* overflow: auto; */
-  white-space: nowrap;
+.desc-text {
+  margin-top: 5px;
+  width: 66.7%;
 }
+
+.pokemon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.pokemon img {
+  width: 250px;
+  height: 250px;
+}
+
+.scroll {
+  padding: 1px;
+  overflow-x: auto;
+  /* overflow-y: hidden; */
+  overflow: auto;
+  white-space: unset;
+  height: 150px;
+}
+
+/* MODAL */
+.wrapper a {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 3px;
+  text-decoration: uppercase;
+  color: #585858;
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(77, 77, 77, 0.7);
+  transition: all 0.4s;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.modal:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modalcontent {
+  position: absolute;
+  background: rgba(77, 77, 77, 1);
+  width: 300px;
+  max-width: 90%;
+  padding: 1em 2em;
+  border-radius: 4px;
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalcontent h2{
+  font-size: 40px;
+}
+
+.modalclose {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 36px;
+}
+
+/* .scroll ::-webkit-scrollbar {
+  display: auto;
+} */
 /* .descricao {
   font-size: 8px;
 } */
+
+@media screen and (max-width: 600px) {
+  .game {
+    margin: 0em 4em;
+    margin-left: 10px;
+  }
+}
 </style>
