@@ -1,4 +1,13 @@
-# pokemon_gues
+# pokemon_gues v1.0.0 (still testing, there's still a lot to keep an eye on the news! 👀👀🦾🤹‍♀️)
+### I made this site just to train my skills in my spare time
+
+
+## Prints 
+<img src="static/socials/prints/print_01.png" align="center" />
+
+<img src="static/socials/prints/print_02.png" align="center" />
+
+<img src="static/socials/prints/print_03.png" align="center" />
 
 ## Build Setup
 
