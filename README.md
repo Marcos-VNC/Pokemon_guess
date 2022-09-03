@@ -4,9 +4,7 @@
 
 ## Prints 
 <img src="static/socials/prints/print_01.png" align="right" />
-
 <img src="static/socials/prints/print_02.png" align="right" />
-
 <img src="static/socials/prints/print_03.png" align="right" />
 
 ## Build Setup
